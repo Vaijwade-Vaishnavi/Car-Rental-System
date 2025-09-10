@@ -1,5 +1,4 @@
 import mysql.connector        
-# import mysql.connector
 import datetime
 
 
@@ -11,46 +10,32 @@ def get_connection():
         password='',  # Update with your MySQL password
         database='car_rental'
     )
-# # def get_connection():
-# #    return mysql.connection.connect(
-            # host="localhost",
-            # user= "root",
-            # password = "",
-            # database = "car_rental"
-# 
-# )
+
 
 # Admin Functions #
 def add_car():
     brand = input("Enter Car Brand: ")
     model = input("Enter Car Model: ")
-    # model=input("enter car model")
-    # brand = input("enter car brand")
     price = float(input("Enter Price per day: "))
-    # prince =float(input("enter price per day"))
+    
 
     conn = get_connection()
-    # conn = get_connection()
     cursor = conn.cursor()
-    # cursor = conn.cursor()
+    
     cursor.execute("INSERT INTO cars (brand, model, price_per_day) VALUES (%s, %s, %s)", 
                    (brand, model, price))
-    # cursor.execute("INSERT INTO cars(brand, model, price_per_day) VALUES (%s, %s, %s)",(brand, model, price))
+    
     conn.commit()
-    # conn.commit()
     conn.close()
-    # conn.close()
+
     print("Car added successfully!\n")
-    # print("car added successfully!"\n)
 
 def view_all_cars():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM cars")
     cars = cursor.fetchall()
-    # cars = cursor.fetchall()
     conn.close()
-    # conn.close()
 
     print("\n--- Available Cars ---")
     print("ID | Brand | Model | Price/Day | Status")
@@ -62,18 +47,11 @@ def view_all_cars():
 
 def delete_car():
     car_id = int(input("Enter Car ID to delete: "))
-    # car_id = int(input("enter car id to delete: "))
-
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM cars WHERE car_id = %s", (car_id,))
     conn.commit()
     conn.close()
-    # conn = get_connection()
-    # cursor = conn.cursor()
-    # cusor.execute("DELETE FROM cars WHERE car_id = %s" (car_id,))
-    # conn.commit()
-    # conn.close()#
 
     print("Car deleted successfully!\n")
 
@@ -82,9 +60,7 @@ def view_available_cars():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM cars WHERE is_available = TRUE")
-    # cursor.execute("SELECT * FROM cars is_available = TRUE ")
     cars = cursor.fetchall()
-    # cars = cursor.fetchall()
     conn.close()
 
     if not cars:
@@ -109,8 +85,6 @@ def rent_car():
 
     # Check if car is available
     cursor.execute("SELECT price_per_day, is_available FROM cars WHERE car_id = %s", (car_id,))
-    # cursor.execute("SELECT price_per_day, is_available FROM cars WHERE cars_id = %s"(car_id))
-    # car =cursor.fetchone()
     car = cursor.fetchone()
 
     if not car:
@@ -132,12 +106,9 @@ def rent_car():
         INSERT INTO rentals (car_id, customer_name, days, total_cost, rental_date, return_date)
         VALUES (%s, %s, %s, %s, %s, %s)
     """, (car_id, customer_name, days, total_cost, rental_date, return_date))
-    # cusor.execute(""" INSERT INTO rentals (car_id, customer_name,days, total_cost, rental_date, return_date)""")
 
     # Update car availability
     cursor.execute("UPDATE cars SET is_available = FALSE WHERE car_id = %s", (car_id,))
-    # update car availability
-    # cursor.execute("UPDATE cars SET is_available = FLASE WHERE car_id =%s", (car_id))
 
     conn.commit()
     conn.close()
